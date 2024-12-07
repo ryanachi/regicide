@@ -4,7 +4,7 @@ from card import Card
 
 @dataclass
 class Player():
-    hand: set[Card]
+    hand: list[Card]
     num_jokers: int
 
 # @dataclass

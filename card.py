@@ -9,14 +9,14 @@ class Suit(Enum):
     # JOKER = 4
 
 class Royals(Enum):
-    JACK = 0
-    QUEEN = 1
-    KING = 2
+    JACK = 10
+    QUEEN = 15
+    KING = 20
 
 @dataclass
 class Card():
     suit: Suit | None
-    rank: int
+    rank: int | Royals
     health: int = None
     attack: int = None
 
