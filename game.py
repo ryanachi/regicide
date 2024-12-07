@@ -39,9 +39,9 @@ class Game():
 
             while self.opp_card.health > 0:
                 # Include all inputs for the sake of building a strategy later
-                play_card = strategy(self.castle_deck, self.tavern_deck, self.discard_deck, self.player, self.opp_card)
-                self.opp_card.health -= play_card.attack
-
+                player_card = strategy(self.castle_deck, self.tavern_deck, self.discard_deck, self.player, self.opp_card)
+                self.player.hand.remove(player_card)
+                self.opp_card.health -= player_card.attack
                 # Attack the player: Do we want the player to choose which cards to discard??
 
                 # Loss condition
