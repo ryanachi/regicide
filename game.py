@@ -40,8 +40,33 @@ class Game():
             while self.opp_card.health > 0:
                 # Include all inputs for the sake of building a strategy later
                 player_card = strategy(self.castle_deck, self.tavern_deck, self.discard_deck, self.player, self.opp_card)
+
+                # 1. Play a card from hand to attack the enemy
                 self.player.hand.remove(player_card)
+
+                # 2. Activate the played card’s suit power
+                # I would normally use a `match` for this but that requires python3.10
+                if self.card.suit == Suit.CLUB:
+                    pass
+                    # no action needed; already addressed in card.py
+                elif self.card.suit == Suit.DIAMOND:
+                    cards_to_draw = min([self.card.rank, len(self.tavern_deck), HAND_SIZE - len(self.player.hand)])
+                    ... 
+                    # draw from tavern
+                elif self.card.suit == Suit.HEART:
+                    ...
+                    # refill tavern
+                elif self.card.suit == Suit.SPADE:
+
+
+
+
+                # 3. Deal damage and check to see if the enemy is defeated
                 self.opp_card.health -= player_card.attack
+
+                # 4. Suffer damage from the enemy by discarding cards
+
+
                 # Attack the player: Do we want the player to choose which cards to discard??
 
                 # Loss condition
