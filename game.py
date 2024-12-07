@@ -49,11 +49,10 @@ class Game():
                     print("You Lose") 
 
             # If beaten, replace curr card and add royal to appropriate deck
-            new_R_Suit = self.opp_card.suit
-            new_Royal = Card(new_R_Suit, Royals.new_R_Suit)
+            # Note that its health won't be used again, so we don't need to reset it
             if self.opp_card.health == 0:
-                self.tavern_deck.insert(0, new_Royal)
+                self.tavern_deck.insert(0, self.opp_card)
             else:
-                self.discard_deck.append(new_Royal)
+                self.discard_deck.append(self.opp_card)
             
         
