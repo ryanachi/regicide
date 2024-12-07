@@ -50,14 +50,14 @@ class Game():
                     pass
                     # no action needed; already addressed in card.py
                 elif self.card.suit == Suit.DIAMOND:
-                    cards_to_draw = min([self.card.rank, len(self.tavern_deck), HAND_SIZE - len(self.player.hand)])
-                    ... 
+                    n = min([self.card.rank, len(self.tavern_deck), HAND_SIZE - len(self.player.hand)])
+                    cards_to_draw, self.tavern_deck = self.tavern_deck[:n], self.tavern_deck[n:]
+                    self.player.hand |= set(cards_to_draw)
                     # draw from tavern
                 elif self.card.suit == Suit.HEART:
-                    ...
                     # refill tavern
                 elif self.card.suit == Suit.SPADE:
-
+                    ...
 
 
 
