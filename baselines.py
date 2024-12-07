@@ -7,21 +7,11 @@ def random_choice(castle, tavern, discard, player, opp_card):
 
 # Always play highest card
 def highest_card(castle, tavern, discard, player, opp_card):
-    highest_card = None
-    for card in player.hand:
-        if highest_card == None or card.attack > highest_card.attack:
-            highest_card = card
-
-    return highest_card
+    return max([(card.attack, card) for card in player.hand])[1]
 
 # Always play lowest card
 def lowest_card(castle, tavern, discard, player, opp_card):
-    lowest_card = None
-    for card in player.hand:
-        if lowest_card == None or card.attack > lowest_card.attack:
-            lowest_card = card
-
-    return lowest_card
+    return min([(card.attack, card) for card in player.hand])[1]
 
 # Choose all diamonds, clubs, hearts, spades (highest to lowest)
 def suit_order(castle, tavern, discard, player, opp_card):
