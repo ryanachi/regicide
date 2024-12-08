@@ -27,10 +27,10 @@ class Game():
         # initialize castle deck
         for _, suit in enumerate(Suit):
             for _, royal in enumerate(Royals):
-                new_Royal = Card(suit, royal)
-                new_Royal.attack = Royals.royal.value
-                new_Royal.health = Royals.royal.value * 2
-                self.castle_deck.append(Card(suit, royal))
+                new_Royal = Card(suit, Royals.royal.value)
+                new_Royal.attack = new_Royal.rank
+                new_Royal.health = new_Royal.rank * 2
+                self.castle_deck.append(new_Royal)
         self.castle_deck.shuffle()
 
     def main(self, strategy):
@@ -69,6 +69,7 @@ class Game():
                 # 4. Suffer damage from the enemy by discarding cards 
                 # Heuristic: Automatically select cards that add up to the attack power, 
                 # with penalties for too many of a single suit discarded
+                
 
                 # Loss condition
                 if not self.player.hand:
@@ -76,6 +77,8 @@ class Game():
 
             # If beaten, replace curr card and add royal to appropriate deck
             # Note that its health won't be used again, so we don't need to reset it
+            # Reset the attack power, since Royal clubs do not have double damage
+            self.opp_card.attack = self.rank * (2 if self.suit == Suit.CLUB else 1)
             if self.opp_card.health == 0:
                 self.tavern_deck.insert(0, self.opp_card)
             else:
