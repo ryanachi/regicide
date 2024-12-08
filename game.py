@@ -6,6 +6,7 @@ from baselines import (
 from card import Suit, Royals, Card
 from player import Player
 from dataclasses import dataclass, field
+import random
 
 
 HAND_SIZE = 8
@@ -26,7 +27,7 @@ class Game():
         for rank in range(1, 10+1):
             for _, suit in enumerate(Suit):
                 self.tavern_deck.append(Card(suit, rank))
-        self.tavern_deck.shuffle()
+        random.shuffle(self.tavern_deck)
         self.player.hand, self.tavern_deck = set(self.tavern_deck[:HAND_SIZE]), self.tavern_deck[HAND_SIZE:]
 
         # initialize castle deck
