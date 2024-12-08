@@ -5,7 +5,7 @@ from card import Card
 @dataclass
 class Player():
     hand: set[Card]
-    num_jokers: int
+    # num_jokers: int
 
 # @dataclass
 # class Opp():

@@ -1,6 +1,12 @@
+from baselines import (
+    random_choice,
+    highest_card,
+    lowest_card,
+)
 from card import Suit, Royals, Card
-from player import Player, Opp
-from dataclasses import dataclass, default_factory
+from player import Player
+from dataclasses import dataclass, field
+
 
 HAND_SIZE = 8
 
@@ -8,15 +14,14 @@ SUITS = {}
 
 @dataclass
 class Game():
-    castle_deck: list[Card] = default_factory(list)
-    tavern_deck: list[Card] = default_factory(list)
-    discard_deck: list[Card] = default_factory(list)
-    player: Player
-    opp_card: Card
+    # player: Player = field(default_factory=Player(set()))
+    castle_deck: list[Card] = field(default_factory=list)
+    tavern_deck: list[Card] = field(default_factory=list)
+    discard_deck: list[Card] = field(default_factory=list)
     # opp: Opp
 
     def __post_init__(self):
-
+        self.player = Player(set())
         # initialize tavern deck
         for rank in range(1, 10+1):
             for _, suit in enumerate(Suit):
@@ -32,6 +37,8 @@ class Game():
                 new_Royal.health = new_Royal.rank * 2
                 self.castle_deck.append(new_Royal)
         self.castle_deck.shuffle()
+
+        self.opp_card = self.castle_deck.pop(0)
 
     def discard(self, player_hand, attack_pow):
         # Heuristic: Automatically select cards that add up to the attack power (Done), 
@@ -89,7 +96,7 @@ class Game():
                 # 3. Deal damage and check to see if the enemy is defeated
                 self.opp_card.health -= player_card.attack
 
-                # 4. Suffer damage from the enemy by discarding cards 
+                # 4. Suffer damage from the enemy by discarding cards
                 _, discard_hand = self.discard(self.player.hand, self.opp_card.attack)
                 for c in discard_hand:
                     self.player.hand.remove(c)
@@ -109,4 +116,6 @@ class Game():
 
         print("You Win!")
             
-        
+if __name__ == "__main__":
+    g = Game()
+    g.main(random_choice)
