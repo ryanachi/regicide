@@ -33,6 +33,28 @@ class Game():
                 self.castle_deck.append(new_Royal)
         self.castle_deck.shuffle()
 
+    def discard(self, player_hand, attack_pow):
+        # Heuristic: Automatically select cards that add up to the attack power (Done), 
+        # with penalties for too many of a single suit discarded (TODO)
+        best_hand = []
+        best_score = 0
+
+        if not self.player.hand and attack_pow > 0:
+            best_score = -1
+        elif attack_pow <= 0:
+            best_score = sum(player_hand) + attack_pow
+
+        # whats the fastest and most efficient way of doing this :(
+        for card in self.player.hand:
+            player_hand.remove(card)
+            i_score, i_hand = self.discard(player_hand, attack_pow - card.rank)  # Include
+            e_score, e_hand = self.discard(player_hand, attack_pow)  # Exclude
+
+            if max(i_score, e_score) > best_score:
+                best_score, best_hand = i_score, (i_hand + [card]) if i_score > e_score else e_score, e_hand
+
+        return best_score, best_hand
+
     def main(self, strategy):
         while self.castle_deck:
             self.opp.opp_card = self.castle_deck.pop(0)
@@ -67,9 +89,8 @@ class Game():
                 self.opp_card.health -= player_card.attack
 
                 # 4. Suffer damage from the enemy by discarding cards 
-                # Heuristic: Automatically select cards that add up to the attack power, 
-                # with penalties for too many of a single suit discarded
-                
+                _, discard_hand = self.discard(self.player.hand, self.opp_card.attack)
+                self.player.hand.remove(c for c in discard_hand)
 
                 # Loss condition
                 if not self.player.hand:
