@@ -91,7 +91,8 @@ class Game():
 
                 # 4. Suffer damage from the enemy by discarding cards 
                 _, discard_hand = self.discard(self.player.hand, self.opp_card.attack)
-                self.player.hand.remove(c for c in discard_hand)
+                for c in discard_hand:
+                    self.player.hand.remove(c)
 
                 # Loss condition
                 if not self.player.hand:
