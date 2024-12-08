@@ -83,8 +83,8 @@ class Game():
                     n = min(self.card.rank, len(self.discard_deck))
                     self.tavern_deck, self.discard_deck = self.tavern_deck + self.discard_deck[:n], self.discard_deck[n:]
                 elif self.card.suit == Suit.SPADE:
-                    self.opp_card.attack -= min([self.card.rank, self.opp_card.attack])
                     # decrease enemy attack
+                    self.opp_card.attack -= min([self.card.rank, self.opp_card.attack])
 
                 # 3. Deal damage and check to see if the enemy is defeated
                 self.opp_card.health -= player_card.attack
