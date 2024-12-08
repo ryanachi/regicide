@@ -6,7 +6,7 @@ class Suit(Enum):
     CLUB = 1
     HEART = 2
     SPADE = 3
-    # JOKER = 4  # no jokers in solo
+    # JOKER = 4  # I guess no jokers in solo
 
 class Royals(Enum):
     JACK = 10
