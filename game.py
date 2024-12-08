@@ -40,9 +40,9 @@ class Game():
         best_score = 0
 
         if not self.player.hand and attack_pow > 0:
-            best_score = -1
+            best_score = -10  # Arbitrary bad score
         elif attack_pow <= 0:
-            best_score = sum(player_hand) + attack_pow
+            best_score = sum(player_hand) + (attack_pow / 2)  # Penalize for over-attacking
 
         # whats the fastest and most efficient way of doing this :(
         for card in self.player.hand:
