@@ -33,11 +33,12 @@ class Game():
         # initialize castle deck
         for _, suit in enumerate(Suit):
             for _, royal in enumerate(Royals):
-                new_Royal = Card(suit, Royals.royal.value)
+                new_Royal = Card(suit, royal.value)
                 new_Royal.attack = new_Royal.rank
                 new_Royal.health = new_Royal.rank * 2
                 self.castle_deck.append(new_Royal)
-        self.castle_deck.shuffle()
+        # TODO: shuffling is wrong. Needs to only shuffle across each level.
+        random.shuffle(self.castle_deck)
 
         self.opp_card = self.castle_deck.pop(0)
 
@@ -66,9 +67,8 @@ class Game():
         return best_score, best_hand
 
     def main(self, strategy):
+        self.opp_card = self.castle_deck.pop(0)
         while self.castle_deck:
-            self.opp.opp_card = self.castle_deck.pop(0)
-
             while self.opp_card.health > 0:
                 # Include all inputs for the sake of building a strategy later
                 player_card = strategy(self.castle_deck, self.tavern_deck, self.discard_deck, self.player, self.opp_card)
@@ -78,21 +78,21 @@ class Game():
 
                 # 2. Activate the played card’s suit power
                 # I would normally use a `match` for this but that requires python3.10
-                if self.card.suit == Suit.CLUB:
+                if player_card.suit == Suit.CLUB:
                     pass
                     # no action needed; already addressed in card.py
-                elif self.card.suit == Suit.DIAMOND:
+                elif player_card.suit == Suit.DIAMOND:
                     # draw from tavern
                     n = min([self.card.rank, len(self.tavern_deck), HAND_SIZE - len(self.player.hand)])
                     cards_to_draw, self.tavern_deck = self.tavern_deck[:n], self.tavern_deck[n:]
                     self.player.hand |= set(cards_to_draw)
-                elif self.card.suit == Suit.HEART:
+                elif player_card.suit == Suit.HEART:
                     # refill tavern
                     n = min(self.card.rank, len(self.discard_deck))
                     self.tavern_deck, self.discard_deck = self.tavern_deck + self.discard_deck[:n], self.discard_deck[n:]
-                elif self.card.suit == Suit.SPADE:
+                elif player_card.suit == Suit.SPADE:
                     # decrease enemy attack
-                    self.opp_card.attack -= min([self.card.rank, self.opp_card.attack])
+                    self.opp_card.attack -= min([player_card.rank, self.opp_card.attack])
 
                 # 3. Deal damage and check to see if the enemy is defeated
                 self.opp_card.health -= player_card.attack

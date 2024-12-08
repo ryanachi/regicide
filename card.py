@@ -23,3 +23,6 @@ class Card():
     def __post_init__(self):
         self.health = self.rank
         self.attack = self.rank * (2 if self.suit == Suit.CLUB else 1)
+    
+    def __hash__(self):
+        return hash((self.suit, self.rank))

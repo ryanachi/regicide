@@ -3,7 +3,7 @@ from card import Suit
 
 # Random choice
 def random_choice(castle, tavern, discard, player, opp_card):
-    return random.sample(player.hand, 1)
+    return random.choice(list(player.hand))
 
 # Always play highest card
 def highest_card(castle, tavern, discard, player, opp_card):
