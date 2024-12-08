@@ -105,6 +105,7 @@ class Game():
                 # Loss condition
                 if not self.player.hand:
                     print("You Lose") 
+                    return 0
 
             # If beaten, replace curr card and add royal to appropriate deck
             # Note that its health won't be used again, so we don't need to reset it
@@ -116,6 +117,7 @@ class Game():
                 self.discard_deck.append(self.opp_card)
 
         print("You Win!")
+        return 100
             
 if __name__ == "__main__":
     g = Game()

@@ -1,6 +1,7 @@
 from math import sqrt, log
 from copy import deepcopy
 import random
+from baselines import random_choice
 
 class Node:
     def __init__(self, game, castle, tavern, discard, hand, opp_card,
@@ -109,24 +110,15 @@ class Node:
         Rollout is a random play from a copy of the environment of the current node.  
         Gives value for the current node, which seems random alone. But as number of
         rollouts increase, the more accurate the average of the value.
+
+        So I think the random rollout should just be playing the game with the random strategy passed in.
         """ 
 
         if self.finished: 
             return 0
-        
-        v = 0
-        finished = False
+    
         new_game = deepcopy(self.game)
-
-        while not finished:
-            action = new_game.hand.sample()  # Adjust this later to match our actual game
-            castle, tavern, discard, hand, opp_card, finished, reward = new_game.step(action)  # Fix later to fit the actual game
-            v += reward
-            if finished: # FIX LATER
-                #new_game.reset()
-                #new_game.close()  --> maybe we do not need these at all. I will leave in for now in case
-                break
-        
+        v = new_game.main(random_choice)
         return v
 
     def next(self):
@@ -156,3 +148,11 @@ class Node:
 
         return max_child, max_val
 
+def Policy_Player_MCTS(my_tree, exploring):
+    for i in range(exploring):
+        my_tree.explore()
+
+    next_tree, next_action = my_tree.next()
+    next_tree.detach_parent()
+
+    return next_tree, next_action
