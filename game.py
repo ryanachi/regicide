@@ -79,9 +79,6 @@ class Game():
                     cards_to_draw, self.tavern_deck = self.tavern_deck[:n], self.tavern_deck[n:]
                     self.player.hand |= set(cards_to_draw)
                 elif self.card.suit == Suit.HEART:
-                    n = min([self.card.rank, len(self.discard_deck)])
-                    self.tavern_deck.append(c for c in self.discard_deck[:n])
-                    self.discard_deck = self.discard_deck[n:]
                     # refill tavern
                     n = min(self.card.rank, len(self.discard_deck))
                     self.tavern_deck, self.discard_deck = self.tavern_deck + self.discard_deck[:n], self.discard_deck[n:]
