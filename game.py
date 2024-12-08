@@ -37,15 +37,17 @@ class Game():
         # Heuristic: Automatically select cards that add up to the attack power (Done), 
         # with penalties for too many of a single suit discarded (TODO)
         best_hand = []
-        best_score = 0
+        best_score = -11
 
-        if not self.player.hand and attack_pow > 0:
-            best_score = -10  # Arbitrary bad score
+        if not player_hand and attack_pow > 0:
+            best_score = -10  # Arbitrary bad score that beats the initialization
         elif attack_pow <= 0:
-            best_score = sum(player_hand) + (attack_pow / 2)  # Penalize for over-attacking
+            best_score = sum([c.rank for c in player_hand]) + (attack_pow / 2)  # Penalize for over-attacking
+            hand_suits = [c.suit for c in player_hand]
+            best_score -= hand_suits.count(hand_suits)  # Penalize for not leaving a good mix of cards
 
         # whats the fastest and most efficient way of doing this :(
-        for card in self.player.hand:
+        for card in player_hand:
             player_hand.remove(card)
             i_score, i_hand = self.discard(player_hand, attack_pow - card.rank)  # Include
             e_score, e_hand = self.discard(player_hand, attack_pow)  # Exclude
@@ -104,5 +106,7 @@ class Game():
                 self.tavern_deck.insert(0, self.opp_card)
             else:
                 self.discard_deck.append(self.opp_card)
+
+        print("You Win!")
             
         
