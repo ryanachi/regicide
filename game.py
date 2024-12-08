@@ -74,15 +74,17 @@ class Game():
                     pass
                     # no action needed; already addressed in card.py
                 elif self.card.suit == Suit.DIAMOND:
+                    # draw from tavern
                     n = min([self.card.rank, len(self.tavern_deck), HAND_SIZE - len(self.player.hand)])
                     cards_to_draw, self.tavern_deck = self.tavern_deck[:n], self.tavern_deck[n:]
                     self.player.hand |= set(cards_to_draw)
-                    # draw from tavern
                 elif self.card.suit == Suit.HEART:
                     n = min([self.card.rank, len(self.discard_deck)])
                     self.tavern_deck.append(c for c in self.discard_deck[:n])
                     self.discard_deck = self.discard_deck[n:]
                     # refill tavern
+                    n = min(self.card.rank, len(self.discard_deck))
+                    self.tavern_deck, self.discard_deck = self.tavern_deck + self.discard_deck[:n], self.discard_deck[n:]
                 elif self.card.suit == Suit.SPADE:
                     self.opp_card.attack -= min([self.card.rank, self.opp_card.attack])
                     # decrease enemy attack
