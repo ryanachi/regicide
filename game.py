@@ -55,19 +55,20 @@ class Game():
                     self.player.hand |= set(cards_to_draw)
                     # draw from tavern
                 elif self.card.suit == Suit.HEART:
+                    n = min([self.card.rank, len(self.discard_deck)])
+                    self.tavern_deck.append(c for c in self.discard_deck[:n])
+                    self.discard_deck = self.discard_deck[n:]
                     # refill tavern
                 elif self.card.suit == Suit.SPADE:
-                    ...
-
-
+                    self.opp_card.attack -= min([self.card.rank, self.opp_card.attack])
+                    # decrease enemy attack
 
                 # 3. Deal damage and check to see if the enemy is defeated
                 self.opp_card.health -= player_card.attack
 
-                # 4. Suffer damage from the enemy by discarding cards
-
-
-                # Attack the player: Do we want the player to choose which cards to discard??
+                # 4. Suffer damage from the enemy by discarding cards 
+                # Heuristic: Automatically select cards that add up to the attack power, 
+                # with penalties for too many of a single suit discarded
 
                 # Loss condition
                 if not self.player.hand:
