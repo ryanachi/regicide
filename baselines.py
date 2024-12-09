@@ -18,12 +18,11 @@ def lowest_card(castle, tavern, discard, player, opp_card):
 
 # Choose all diamonds, clubs, hearts, spades (highest to lowest)
 def suit_order(castle, tavern, discard, player, opp_card):
-    curr_card = None
-    curr_suit = None
-    for card in player.hand:
-        card_suit = card.suit
-        if curr_card == None or (Suit.card_suit.value > Suit.curr_suit.value and card.attack > curr_card.attack):
-            curr_card = card
-            curr_suit = card_suit
+    suit_to_priority = {
+        Suit.SPADE : 4,
+        Suit.DIAMOND: 3,
+        Suit.CLUB : 2,
+        Suit.HEART : 1
+    }
 
-    return curr_card 
+    return max([(suit_to_priority[card.suit], card.rank, card) for card in player.hand], key=lambda tup: (tup[0], tup[1]))[2]

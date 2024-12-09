@@ -211,6 +211,8 @@ def main(explorations=200, c=0.3):
 
     print(f"Moving Average of E={explorations}, C={c} is {moving_average[-1]}")
 
+    print(f"Average of E={explorations}, C={c} is {sum(rewards)/len(rewards)}")
+
     print(f"Win rate of E={explorations}, C={c} is {sum([1 for x in rewards if x == 10_000]) / len(rewards)}")
 
     filepath = f"rewards_{explorations=}_{c=}_{N_EPISODES=}.npy"
@@ -239,5 +241,5 @@ if __name__ == "__main__":
     # main(explorations=200, c=0.2)
     # main(explorations=200, c=0.3)
 
-    print("c Test, E = 150, c=0.2")
-    main(explorations=150, c=0.2)
+    print("c Test, E = 100, c=0.1")
+    main(explorations=100, c=0.1)
