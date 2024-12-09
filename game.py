@@ -25,7 +25,7 @@ class Game():
     def __post_init__(self):
         self.player = Player(set())
         # initialize tavern deck
-        for rank in range(1, 10+1):
+        for rank in range(4, 12+1):
             for _, suit in enumerate(Suit):
                 self.tavern_deck.append(Card(suit, rank))
         rng.shuffle(self.tavern_deck)
@@ -206,7 +206,7 @@ class Game():
         # Already popped off first card
 
         _cnt = 0
-        while self.castle_deck and self.opp_card.health > 0:
+        while self.castle_deck or self.opp_card.health > 0:
             _cnt += 1
             #print(f"\n======STEP {_cnt}======")
             res, done = self.one_step(strategy)

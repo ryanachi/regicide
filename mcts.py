@@ -8,7 +8,7 @@ from game import Game
 
 
 HEURISTIC = highest_card
-N_EPISODES = 100
+N_EPISODES = 500
 N_EXPLORATIONS_PER_TREE = 10
 
 class Node:
@@ -218,14 +218,17 @@ if __name__ == "__main__":
 
     #print("")
 
-    print("c Test, E = 100")
-    main(explorations=100, c=0.1)
-    main(explorations=100, c=0.2)
-    main(explorations=100, c=0.3)
+    # print("c Test, E = 100")
+    # main(explorations=100, c=0.1)
+    # main(explorations=100, c=0.2)
+    # main(explorations=100, c=0.3)
 
     print("")
 
+    # print("c Test, E = 200")
+    # main(explorations=200, c=0.1)
+    # main(explorations=200, c=0.2)
+    # main(explorations=200, c=0.3)
+
     print("c Test, E = 200")
-    main(explorations=200, c=0.1)
     main(explorations=200, c=0.2)
-    main(explorations=200, c=0.3)
