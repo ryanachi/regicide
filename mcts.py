@@ -1,6 +1,7 @@
 from math import sqrt, log
 from copy import deepcopy
 from rng import rng
+from tqdm import trange
 
 from baselines import random_choice, highest_card
 from game import Game
@@ -160,7 +161,7 @@ class Node:
 
 
 def policy_player_MCTS(my_tree, count):
-    for i in range(count):
+    for i in trange(count):
         my_tree.explore()
 
     next_tree, next_action = my_tree.next()
@@ -175,7 +176,7 @@ def mean(lst):
 def main(explorations=200, c=0.3):
     rewards = []
     moving_average = []
-    for e in range(N_EPISODES):
+    for e in trange(N_EPISODES):
     #for e in range(10):
 
 
@@ -184,7 +185,7 @@ def main(explorations=200, c=0.3):
         done = False
         
         new_game = deepcopy(game)
-        mytree = Node(game=new_game, finished=False, parent=None, last_action=None, c=c)
+        mytree = Node(game=new_game, finished=False, parent=None, action=None, c=c)
         
         print('episode #' + str(e+1))
         
