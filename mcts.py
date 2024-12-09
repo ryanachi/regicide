@@ -8,7 +8,7 @@ from game import Game
 
 
 HEURISTIC = highest_card
-N_EPISODES = 10
+N_EPISODES = 100
 N_EXPLORATIONS_PER_TREE = 10
 
 class Node:
@@ -66,7 +66,7 @@ class Node:
             games.append(new_game)
 
         children = {}
-        print(f"{actions=}")
+        #print(f"{actions=}")
         for action, game in zip(actions,games):
             (reward, done) = game.one_step(HEURISTIC, action=action) 
             children[action] = Node(game=game, finished=done, parent=self, action=action)
@@ -100,7 +100,7 @@ class Node:
         if current.N >= 1:
             current.create_child()
             if current.children:
-                print(f"{current.children=}")
+                #print(f"{current.children=}")
                 current = rng.choice(list(current.children.values()))
         current.Q += current.rollout()
         current.N += 1
@@ -126,7 +126,7 @@ class Node:
             return 0
     
         new_game = deepcopy(self.game)
-        print(f"\n-----NEW ROLLOUT------")
+        #print(f"\n-----NEW ROLLOUT------")
         v = new_game.main(HEURISTIC)
         return v
 
@@ -148,7 +148,7 @@ class Node:
         max_child = None
         max_action = None
 
-        print(f"{self.children.items()=}")
+        #print(f"{self.children.items()=}")
         for action, node in self.children.items():
             if action in self.game.player.hand:
                 val = node.N
@@ -161,7 +161,7 @@ class Node:
 
 
 def policy_player_MCTS(my_tree, count):
-    for i in trange(count):
+    for i in range(count):
         my_tree.explore()
 
     next_tree, next_action = my_tree.next()
@@ -187,21 +187,21 @@ def main(explorations=200, c=0.3):
         new_game = deepcopy(game)
         mytree = Node(game=new_game, finished=False, parent=None, action=None, c=c)
         
-        print('episode #' + str(e+1))
+        #print('episode #' + str(e+1))
         
         while not done:
         
             mytree, action = policy_player_MCTS(mytree, explorations)
             
             (reward, done) = game.one_step(HEURISTIC, action=action) 
-            print(f"{done=}")
+            #print(f"{done=}")
                             
             reward_e = reward_e + reward
             
             #game.render() # uncomment this if you want to see your agent in action!
                     
             if done:
-                print('reward_e ' + str(reward_e))
+                #print('reward_e ' + str(reward_e))
                 break
             
         rewards.append(reward_e)

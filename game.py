@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from rng import rng
 
 
-HAND_SIZE = 8
+HAND_SIZE = 10
 
 SUITS = {}
 
@@ -135,15 +135,15 @@ class Game():
         # return best_score, best_hand
 
     def one_step(self, strategy, action=None):
-        print(f"HAND: {self.player.hand}")
+        #print(f"HAND: {self.player.hand}")
 
         # Include all inputs for the sake of building a strategy later
         if action:
             player_card = action
         else:
             player_card = strategy(self.castle_deck, self.tavern_deck, self.discard_deck, self.player, self.opp_card)
-        print(f"CARD: {player_card}")
-        print(f"")
+        #print(f"CARD: {player_card}")
+        #print(f"")
 
         # 1. Play a card from hand to attack the enemy
         self.player.hand.remove(player_card)
@@ -168,7 +168,7 @@ class Game():
 
         # 3. Deal damage, add card to discard, and check to see if the enemy is defeated
         self.opp_card.health -= player_card.attack
-        print(f"{self.opp_card}'s health={self.opp_card.health}, attack={self.opp_card.attack}")
+        #print(f"{self.opp_card}'s health={self.opp_card.health}, attack={self.opp_card.attack}")
         self.discard_deck.append(player_card)
         if self.opp_card.health <= 0:
             # If beaten, replace curr card and add royal to appropriate deck
@@ -191,7 +191,7 @@ class Game():
             # None means insufficient cards to discard
             if discard_set is None:
                 return (-100 * len(self.castle_deck), True)
-            print(f"{discard_set=}")
+            #print(f"{discard_set=}")
             for c in discard_set:
                 self.player.hand.remove(c)
                 self.discard_deck.append(c)
@@ -208,10 +208,10 @@ class Game():
         _cnt = 0
         while self.castle_deck and self.opp_card.health > 0:
             _cnt += 1
-            print(f"\n======STEP {_cnt}======")
+            #print(f"\n======STEP {_cnt}======")
             res, done = self.one_step(strategy)
             if res < 0:
-                print("You Lose :(")
+                #print("You Lose :(")
                 return res
             if done:
                 return res
