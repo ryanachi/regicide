@@ -2,6 +2,8 @@ from math import sqrt, log
 from copy import deepcopy
 from rng import rng
 from tqdm import trange
+import pickle
+import numpy as np
 
 from baselines import random_choice, highest_card
 from game import Game
@@ -208,6 +210,13 @@ def main(explorations=200, c=0.3):
         moving_average.append(mean(rewards[-100:]))
 
     print(f"Moving Average of E={explorations}, C={c} is {moving_average[-1]}")
+
+    print(f"Win rate of E={explorations}, C={c} is {sum([1 for x in rewards if x == 10_000]) / len(rewards)}")
+
+    filepath = f"rewards_{explorations=}_{c=}_{N_EPISODES=}.npy"
+    np.save(filepath, rewards, allow_pickle=True)
+
+    
         
 
 if __name__ == "__main__":
@@ -230,5 +239,5 @@ if __name__ == "__main__":
     # main(explorations=200, c=0.2)
     # main(explorations=200, c=0.3)
 
-    print("c Test, E = 200")
-    main(explorations=200, c=0.2)
+    print("c Test, E = 150, c=0.2")
+    main(explorations=150, c=0.2)
