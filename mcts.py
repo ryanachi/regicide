@@ -1,28 +1,31 @@
 from math import sqrt, log
 from copy import deepcopy
-import random
+from rng import rng
 
 from baselines import random_choice, highest_card
 from game import Game
+
 
 HEURISTIC = highest_card
 N_EPISODES = 10
 N_EXPLORATIONS_PER_TREE = 10
 
 class Node:
-    def __init__(self, game, finished, parent):
+    def __init__(self, game, finished, parent, action, c=0.3):
         self.children = None  # Dictionary of child nodes
-        self.Q = 0  # Sum of value of rollouts from this node
+        self.Q = 0  # Sum of rewards of rollouts from this node
         self.N = 0  # Number of visits to this node
 
         self.game = game  # Copy of the game environment so we can simulate it
         self.finished = finished  # whether the game is finished or not, so search stops
         self.parent = parent  # for backpropagation
 
-        self.c = 0.3  # Tunable parameter 
+        self.action = action # action we took to get here
+
+        self.c = c  # Tunable parameter 
 
 
-    def get_score(self):
+    def get_UCB_score(self):
         """ 
         Gives values to the node, and MCTS picks nodes with highest value. 
         As according to the textbook, algorithm takes the action that maximizes:
@@ -65,7 +68,7 @@ class Node:
         print(f"{actions=}")
         for action, game in zip(actions,games):
             (reward, done) = game.one_step(HEURISTIC, action=action) 
-            children[action] = Node(game=game, finished=done, parent=self)
+            children[action] = Node(game=game, finished=done, parent=self, action=action)
 
         self.children = children
 
@@ -79,17 +82,17 @@ class Node:
             b. Otherwise, expand the node and create its children. Pick a random child, and do a rollout update
         3. Backpropagate the updated statistics up the tree until the root: update both value and visit counts
         """ 
-
+        # pudb.set_trace()
         current = self
         
         # Step 1: Keep picking children until we reach a leaf
         while current.children:
             children = current.children
-            max_score = max(c.get_score() for c in children.values())
-            actions = [a for a, c in children.items() if c.get_score() == max_score]
+            max_score = max(c.get_UCB_score() for c in children.values())
+            actions = [a for a, c in children.items() if c.get_UCB_score() == max_score]
             if len(actions) == 0:
                 print("There are no actions available at this score. ", max_score)
-            action = random.choice(actions)
+            action = rng.choice(actions)
             current = children[action]
 
         # Step 2: If the leaf has been explored before, expand node and pick a random child. Do a rollout
@@ -97,7 +100,7 @@ class Node:
             current.create_child()
             if current.children:
                 print(f"{current.children=}")
-                current = random.choice(list(current.children.values()))
+                current = rng.choice(list(current.children.values()))
         current.Q += current.rollout()
         current.N += 1
 
@@ -122,6 +125,7 @@ class Node:
             return 0
     
         new_game = deepcopy(self.game)
+        print(f"\n-----NEW ROLLOUT------")
         v = new_game.main(HEURISTIC)
         return v
 
@@ -143,12 +147,14 @@ class Node:
         max_child = None
         max_action = None
 
+        print(f"{self.children.items()=}")
         for action, node in self.children.items():
-            val = node.N
-            if val > max_val:
-                max_val = val
-                max_child = node
-                max_action = action
+            if action in self.game.player.hand:
+                val = node.N
+                if val > max_val:
+                    max_val = val
+                    max_child = node
+                    max_action = action
 
         return max_child, max_action
 
@@ -166,11 +172,11 @@ def mean(lst):
     return sum(lst) / len(lst)
 
 
-def main():
+def main(explorations=200, c=0.3):
     rewards = []
     moving_average = []
-    # for e in range(N_EPISODES):
-    for e in range(1):
+    for e in range(N_EPISODES):
+    #for e in range(10):
 
 
         reward_e = 0    
@@ -178,16 +184,16 @@ def main():
         done = False
         
         new_game = deepcopy(game)
-        mytree = Node(game=new_game, finished=False, parent=None)
+        mytree = Node(game=new_game, finished=False, parent=None, last_action=None, c=c)
         
         print('episode #' + str(e+1))
         
         while not done:
         
-            mytree, action = policy_player_MCTS(mytree, N_EXPLORATIONS_PER_TREE)
+            mytree, action = policy_player_MCTS(mytree, explorations)
             
             (reward, done) = game.one_step(HEURISTIC, action=action) 
-            print(done)
+            print(f"{done=}")
                             
             reward_e = reward_e + reward
             
@@ -199,7 +205,26 @@ def main():
             
         rewards.append(reward_e)
         moving_average.append(mean(rewards[-100:]))
+
+    print(f"Moving Average of E={explorations}, C={c} is {moving_average[-1]}")
         
 
 if __name__ == "__main__":
-    main()
+    #print("Explorations Test:")
+    #main(explorations=100, c=0.3)
+    #main(explorations=200, c=0.3)
+    #main(explorations=300, c=0.3)
+
+    #print("")
+
+    print("c Test, E = 100")
+    main(explorations=100, c=0.1)
+    main(explorations=100, c=0.2)
+    main(explorations=100, c=0.3)
+
+    print("")
+
+    print("c Test, E = 200")
+    main(explorations=200, c=0.1)
+    main(explorations=200, c=0.2)
+    main(explorations=200, c=0.3)

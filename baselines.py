@@ -1,10 +1,12 @@
-import random
+# import random
 from card import Suit
+from rng import rng
+
 
 # Random choice
 def random_choice(castle, tavern, discard, player, opp_card):
     print(list(player.hand))
-    return random.choice(list(player.hand))
+    return rng.choice(list(player.hand))
 
 # Always play highest card
 def highest_card(castle, tavern, discard, player, opp_card):
@@ -24,4 +26,4 @@ def suit_order(castle, tavern, discard, player, opp_card):
             curr_card = card
             curr_suit = card_suit
 
-    return curr_card
+    return curr_card 

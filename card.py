@@ -19,13 +19,14 @@ class Card():
     rank: int
     health: int = None
     attack: int = None
+    is_royal: bool = False
 
     def __post_init__(self):
         self.health = self.rank
         self.attack = self.rank
 
     def __eq__(self, other):
-        return self.suit == other.suit and self.rank == other.rank
+        return self.suit == other.suit and self.rank == other.rank and self.is_royal == other.is_royal
     
     def __hash__(self):
         return hash((self.suit, self.rank))
