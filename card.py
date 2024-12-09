@@ -15,7 +15,7 @@ class Royals(Enum):
 
 @dataclass
 class Card():
-    suit: Suit | None
+    suit: Suit
     rank: int
     health: int = None
     attack: int = None
